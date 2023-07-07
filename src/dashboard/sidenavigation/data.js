@@ -1,10 +1,10 @@
 import HomeIcon from './icons/home';
-import StatusIcon from './icons/status';
-import PacientesIcon from './icons/pacientesIcon';
 import ArchivesIcon from './icons/archives';
 import SettingsIcon from './icons/settings';
 import DocumentationIcon from './icons/documentation';
 import CreditsIcon from './icons/credits';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 
 const data = [
@@ -15,12 +15,12 @@ const data = [
   },
   {
     title: 'Pacientes',
-    icon: <PacientesIcon />,
+    icon: <FontAwesomeIcon icon='users' />,
     link: '/admin/pacientes',
   },
   {
     title: 'Funcionários',
-    icon: <ArchivesIcon />,
+    icon: <FontAwesomeIcon className='h-6 w-6' icon='user-nurse' stroke='curretColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} />,
     link: '/admin/funcionarios',
   },
   {
