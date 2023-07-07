@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const data = [
   {
     title: 'Página Inicial',
-    icon: <HomeIcon />,
+    icon: <FontAwesomeIcon icon='home' />,
     link: '/',
   },
   {
@@ -20,12 +20,12 @@ const data = [
   },
   {
     title: 'Funcionários',
-    icon: <FontAwesomeIcon className='h-6 w-6' icon='user-nurse' stroke='curretColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} />,
+    icon: <FontAwesomeIcon className='h-6 w-6' icon='user-nurse'/>,
     link: '/admin/funcionarios',
   },
   {
     title: 'Procedimentos',
-    icon: <CreditsIcon />,
+    icon: <FontAwesomeIcon icon='bed-pulse' />,
     link: '/admin/procedimentos',
   },
   {
@@ -33,11 +33,7 @@ const data = [
     icon: <SettingsIcon />,
     link: '/admin/configuracoes',
   },
-  {
-    title: 'Documentation',
-    icon: <DocumentationIcon />,
-    link: '/admin/documentation',
-  },
+
 ];
 
 export default data;
