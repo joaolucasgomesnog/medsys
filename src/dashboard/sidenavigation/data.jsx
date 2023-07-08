@@ -1,21 +1,15 @@
-import HomeIcon from './icons/home';
-import ArchivesIcon from './icons/archives';
-import SettingsIcon from './icons/settings';
-import DocumentationIcon from './icons/documentation';
-import CreditsIcon from './icons/credits';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 
 const data = [
   {
     title: 'Página Inicial',
-    icon: <FontAwesomeIcon icon='home' />,
+    icon: <FontAwesomeIcon className='h-6 w-6' icon='home' />,
     link: '/',
   },
   {
     title: 'Pacientes',
-    icon: <FontAwesomeIcon icon='users' />,
+    icon: <FontAwesomeIcon className='h-6 w-6' icon='users' />,
     link: '/admin/pacientes',
   },
   {
@@ -30,7 +24,7 @@ const data = [
   },
   {
     title: 'Configurações',
-    icon: <SettingsIcon />,
+    icon: <FontAwesomeIcon className='h-6 w-6' icon='gear'/>,
     link: '/admin/configuracoes',
   },
 
