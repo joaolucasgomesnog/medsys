@@ -10,7 +10,7 @@ const data = [
   {
     title: 'Pacientes',
     icon: <FontAwesomeIcon className='h-6 w-6' icon='users' />,
-    link: '/admin/pacientes',
+    link: '/admin/paciente/pacientes',
   },
   {
     title: 'Funcionários',
