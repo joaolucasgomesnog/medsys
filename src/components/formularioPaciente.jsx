@@ -1,56 +1,78 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 
 
-const FormularioPaciente = () => (
-  <div className="flex w-full justify-center  ">
-    <div className="m-12 p-6 rounded-2xl bg-gray-900 w-80 text-white">
-      <p className="font-bold self-center-">Dados passoais</p>
-      <br />
-      <Field label="Nome completo" name="nome" placeholder="nome" />
-      <Field label="CPF" name="cpf" placeholder="cpf"  />  
-      <Field label="RG" name="rg" placeholder="rg"  /> 
-      {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
-      <Field label="Data de nascimento" name="datanasc" placeholder="01/01/1999" type="date"  /> 
-      <Field label="SUS" name="susnum" placeholder="65654646464643"  /> 
-    </div>
-  
+const FormularioPaciente = () => {
 
+  const [register, setValue] = useState([])
 
-    <div className="m-12 p-6 rounded-2xl bg-gray-900 w-80 text-white">
-      <p className="font-bold self-center-">Endereço</p>
-      <br />
-      <span className='flex  items-center gap-2 p-0 m-0'>
-        <Field label="Cep" name="cep" placeholder="cep" />
-        <button className="rounded bg-red-500 h-11 w-11 mt-1"><FontAwesomeIcon  icon='search'/></button>
-      </span>
+  const checkCEP = (e) => {
+      const cep = e.target.value.replace(/\D/g, '')
+      console.log(cep)
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(res => res.json())
+      .then(dados => {
+        console.log(dados)
+        setValue(dados)
+        document.querySelector('#rua').value = dados.logradouro
+        document.querySelector('#bairro').value = dados.bairro
+        document.querySelector('#cidade').value = dados.localidade
+        document.querySelector('#uf').value = dados.uf
+      })
       
-      <Field label="Rua" name="rua" placeholder="rua"  />  
-      <Field label="Número" name="num" placeholder="0000"  /> 
-      {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
-      <Field label="Bairro" name="bairro" placeholder="bairro"  /> 
-      <span className='flex  items-center gap-2 p-0 m-0'>
-        <Field label="Cidade" name="cidade" placeholder="Serra Talhada" />
-        <Field label="Estado" name="uf" placeholder="PE" />
-      </span>
-    </div>
+  }
 
-    <div className="flex flex-col m-12">
-      <div className=" p-6 rounded-2xl bg-gray-900 w-80 text-white">
-        <p className="font-bold self-center-">Contato</p>
+  return (
+    <div className="flex w-full justify-center  ">
+      <div className="m-12 p-6 rounded-2xl bg-gray-900 w-80 text-white">
+        <p className="font-bold self-center-">Dados passoais</p>
         <br />
-        <Field label="Telefone 1" name="fone" placeholder="87 99999999"  />  
-        <Field label="Telefone 2" name="fone" placeholder="87 99999999"  /> 
-        <Field label="E-mail 1" name="email" placeholder="usuario@dominio.com"  /> 
-        <Field label="E-mail 2" name="email" placeholder="usuario@dominio.com"  /> 
-        
+        <Field label="Nome completo" name="nome" placeholder="nome" />
+        <Field label="CPF" name="cpf" placeholder="cpf"  />  
+        <Field label="RG" name="rg" placeholder="rg"  /> 
+        {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
+        <Field label="Data de nascimento" name="datanasc" placeholder="01/01/1999" type="date"  /> 
+        <Field label="SUS" name="susnum" placeholder="65654646464643"  /> 
       </div>
-      <button className="rounded bg-red-500 h-11 mt-12 text-white">Cadastrar</button>
-    </div>
-  </div>
-);
+    
 
+
+      <div className="m-12 p-6 rounded-2xl bg-gray-900 w-80 text-white">
+        <p className="font-bold self-center-">Endereço</p>
+        <br />
+        <span className='flex  items-center gap-2 p-0 m-0'>
+          <Field label="Cep" name="cep" placeholder="cep"/>
+          <button className="rounded bg-red-500 h-11 w-11 mt-1" onClick={checkCEP}><FontAwesomeIcon  icon='search'/></button>
+        </span>
+        
+        <Field label="Rua" name="rua" id="rua" placeholder="rua" />  
+        <Field label="Número" name="num" placeholder="0000"  /> 
+        {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
+        <Field label="Bairro" name="bairro" placeholder="bairro"  /> 
+        <span className='flex  items-center gap-2 p-0 m-0'>
+          <Field label="Cidade" name="cidade" placeholder="Serra Talhada" />
+          <Field label="Estado" name="uf" placeholder="PE" />
+        </span>
+      </div>
+
+
+
+      <div className="flex flex-col m-12">
+        <div className=" p-6 rounded-2xl bg-gray-900 w-80 text-white">
+          <p className="font-bold self-center-">Contato</p>
+          <br />
+          <Field label="Telefone 1" name="fone" placeholder="87 99999999"  />  
+          <Field label="Telefone 2" name="fone" placeholder="87 99999999"  /> 
+          <Field label="E-mail 1" name="email" placeholder="usuario@dominio.com"  /> 
+          <Field label="E-mail 2" name="email" placeholder="usuario@dominio.com"  /> 
+          
+        </div>
+        <button className="rounded bg-red-500 h-11 mt-12 text-white">Cadastrar</button>
+      </div>
+    </div>
+)
+}
 /*  COMPONENT LOGIC */
 
 const style = {
