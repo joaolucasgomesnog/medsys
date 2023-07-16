@@ -13,19 +13,19 @@ export default function Table() {
 
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Product name
+                                Nome
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Color
+                                CPF
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Category
+                                Data de nascimento
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Price
+                                Telefone
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Action
+                                Ação
                             </th>
                         </tr>
                     </thead>
@@ -37,7 +37,7 @@ export default function Table() {
                                 </div>
                             </td>
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Apple MacBook Pro 17"
+                                Huenio Hugo Moura de Andrade
                             </th>
                             <td class="px-6 py-4">
                                 Silver

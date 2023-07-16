@@ -8,13 +8,12 @@ const FormularioPaciente = () => {
   const [register, setValue] = useState([])
 
   const checkCEP = (e) => {
-      const cep = e.target.value.replace(/\D/g, '')
+      const cep = document.querySelector('#cep').value.replace(/\D/g,'')
       console.log(cep)
       fetch(`https://viacep.com.br/ws/${cep}/json/`)
       .then(res => res.json())
       .then(dados => {
         console.log(dados)
-        setValue(dados)
         document.querySelector('#rua').value = dados.logradouro
         document.querySelector('#bairro').value = dados.bairro
         document.querySelector('#cidade').value = dados.localidade
@@ -42,7 +41,7 @@ const FormularioPaciente = () => {
         <p className="font-bold self-center-">Endereço</p>
         <br />
         <span className='flex  items-center gap-2 p-0 m-0'>
-          <Field label="Cep" name="cep" placeholder="cep"/>
+          <Field label="Cep" name="cep" id="cep" placeholder="cep"/>
           <button className="rounded bg-red-500 h-11 w-11 mt-1" onClick={checkCEP}><FontAwesomeIcon  icon='search'/></button>
         </span>
         
