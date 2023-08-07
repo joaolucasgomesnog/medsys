@@ -100,7 +100,6 @@ model Prontuario {
   diagnostico   String?
   receita       String?
   observacoes   String?
-
   paciente    Paciente      @relation(fields: [paciente_id], references: [id])
   medico      Medico        @relation(fields: [medico_id], references: [id])
   Atendimento Atendimento[]
