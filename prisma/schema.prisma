@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Endereco {
+  id         Int          @id @default(autoincrement())
+  cep        String? // O sinal de interrogação torna o campo opcional
+  rua        String
+  numero     Int
+  bairro     String
+  cidade     String
+  Paciente   Paciente[]
+  Enfermeira Enfermeira[]
+  Medico     Medico[]
+  Atendente  Atendente[]
+}
+
+model Contato {
+  id         Int          @id @default(autoincrement())
+  telefone_1 String
+  telefone_2 String?
+  email_1    String
+  email_2    String?
+  Paciente   Paciente[]
+  Enfermeira Enfermeira[]
+  Medico     Medico[]
+  Atendente  Atendente[]
+}
+
+model Paciente {
+  id            Int           @id @default(autoincrement())
+  cpf           String        @unique
+  nome          String?
+  rg            String?
+  datNascimento DateTime?
+  num_sus       String?
+  endereco_id   Int           @default(1)
+  contato_id    Int           @default(1)
+  endereco      Endereco      @relation(fields: [endereco_id], references: [id])
+  contato       Contato       @relation(fields: [contato_id], references: [id])
+  Prontuario    Prontuario[]
+  Atendimento   Atendimento[]
+}
+
+model Enfermeira {
+  id            Int           @id @default(autoincrement())
+  coren         String
+  nome          String
+  cpf           String
+  rg            String
+  datNascimento DateTime
+  endereco_id   Int
+  endereco      Endereco      @relation(fields: [endereco_id], references: [id])
+  contato_id    Int
+  contato       Contato       @relation(fields: [contato_id], references: [id])
+  Atendimento   Atendimento[]
+}
+
+model Medico {
+  id            Int           @id @default(autoincrement())
+  crm           String
+  nome          String
+  cpf           String
+  rg            String
+  datNascimento DateTime
+  endereco_id   Int
+  endereco      Endereco      @relation(fields: [endereco_id], references: [id])
+  contato_id    Int
+  contato       Contato       @relation(fields: [contato_id], references: [id])
+  Prontuario    Prontuario[]
+  Atendimento   Atendimento[]
+}
+
+model Atendente {
+  id          Int           @id @default(autoincrement())
+  nome        String
+  cpf         String
+  rg          String
+  endereco_id Int
+  endereco    Endereco      @relation(fields: [endereco_id], references: [id])
+  contato_id  Int
+  contato     Contato       @relation(fields: [contato_id], references: [id])
+  Atendimento Atendimento[]
+}
+
+model Prontuario {
+  id            Int      @id @default(autoincrement())
+  paciente_id   Int
+  medico_id     Int
+  data_consulta DateTime
+  sintomas      String?
+  diagnostico   String?
+  receita       String?
+  observacoes   String?
+
+  paciente    Paciente      @relation(fields: [paciente_id], references: [id])
+  medico      Medico        @relation(fields: [medico_id], references: [id])
+  Atendimento Atendimento[]
+}
+
+model Atendimento {
+  id            Int        @id @default(autoincrement())
+  data          DateTime
+  status        Int
+  paciente_id   Int
+  medico_id     Int
+  enfermeira_id Int
+  atendente_id  Int
+  prontuario_id Int
+  paciente      Paciente   @relation(fields: [paciente_id], references: [id])
+  medico        Medico     @relation(fields: [medico_id], references: [id])
+  enfermeira    Enfermeira @relation(fields: [enfermeira_id], references: [id])
+  atendente     Atendente  @relation(fields: [atendente_id], references: [id])
+  prontuario    Prontuario @relation(fields: [prontuario_id], references: [id])
+}
+
