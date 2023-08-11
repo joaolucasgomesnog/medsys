@@ -1,49 +1,14 @@
 import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient()
+import PacienteController from "./controllers/PacienteController";
 
 const router = Router()
 
-router.post("/paciente", async (req, res) => {
-    const { cpf, nome, rg, datNascimento, num_sus, endereco, contato } = req.body;
-    
-    try {
-        const paciente = await prisma.paciente.create({
-            data: {
-                cpf,
-                nome,
-                rg,
-                datNascimento,
-                num_sus,
-                endereco: {
-                    create: {
-                        cep: endereco.cep,
-                        rua: endereco.rua,
-                        numero: endereco.numero,
-                        bairro: endereco.bairro,
-                        cidade: endereco.cidade
-                    }
-                },
-                contato: {
-                    create: {
-                        email_1: contato.email_1,
-                        telefone_1: contato.telefone_1
-                    }
-                }
-            },
-            include: {
-                endereco: true,
-                contato: true
-            }
-        });
-        
-        res.json(paciente);
-    } catch (error) {
-        console.error('Erro ao criar paciente:', error);
-        res.status(500).json({ error: 'Erro ao criar paciente'});
-    }
-});
+router.post("/paciente", PacienteController.createUser)
+router.get("/pacientes", PacienteController.findAllPacientes)
+router.get("/paciente/:id", PacienteController.findPacienteById)
+router.put("/paciente/:id", PacienteController.updatePaciente)
+router.delete("/paciente/:id", PacienteController.deletePacienteById)
+
 
 
 export {router}
