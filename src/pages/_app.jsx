@@ -13,7 +13,7 @@ import {
 import { library } from '@fortawesome/fontawesome-svg-core';
 import LoginLayout from '../dashboard/loginLayout';
 import LoginPage from './login';
-
+import PrivateRoute from '../components/privateRoute';
 
 library.add(faUsers, faUserNurse, faHome, faBedPulse, faGear, faSearch);
 
@@ -22,18 +22,20 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <Head>
-        <title>MedSys</title>
-      </Head>
-      {isLoginPage ? (
-        <LoginLayout>
-          <Component {...pageProps} />
-        </LoginLayout>
-      ) : (
-        <DashboardLayout>
-          <Component {...pageProps} />
-        </DashboardLayout>
-      )}
+      <PrivateRoute>
+        <Head>
+          <title>MedSys</title>
+        </Head>
+        {isLoginPage ? (
+          <LoginLayout>
+            <Component {...pageProps} />
+          </LoginLayout>
+        ) : (
+          <DashboardLayout>
+            <Component {...pageProps} />
+          </DashboardLayout>
+        )}
+      </PrivateRoute>
     </>
   );
 }
