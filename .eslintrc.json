@@ -2,12 +2,7 @@
   "root": true,
   "extends": ["plugin:prettier/recommended", "next/core-web-vitals"],
   "rules": {
-    "prettier/prettier": [
-      "warn",
-      {
-        "singleQuote": true
-      }
-    ],
+    "prettier/prettier": 0,
     "react/react-in-jsx-scope": 0,
     "react/no-unescaped-entities": 0,
     "react/prop-types": [0, { "ignore": ["children"] }],
