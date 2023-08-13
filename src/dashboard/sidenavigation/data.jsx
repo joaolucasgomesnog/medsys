@@ -27,6 +27,11 @@ const data = [
     icon: <FontAwesomeIcon className='h-6 w-6' icon='gear'/>,
     link: '/admin/configuracoes',
   },
+  {
+    title: 'Sair',
+    icon: <FontAwesomeIcon className='h-6 w-6' icon='sign-out' color='#ee6b6e'/>,
+    link: '/admin/configuracoes',
+  },
 
 ];
 

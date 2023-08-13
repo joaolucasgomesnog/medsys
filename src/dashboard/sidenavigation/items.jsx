@@ -36,5 +36,6 @@ export default function SidenavItems() {
         ))}
       </li>
     </ul>
+
   );
 }

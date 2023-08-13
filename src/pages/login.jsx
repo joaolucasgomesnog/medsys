@@ -32,7 +32,7 @@ const LoginPage = () => {
   }
   return (
     <div className="flex flex-wrap h-full w-full justify-center items-center text-white ">
-    <div className="w-1/2 md:w-1/2 sm:w-full bg-gray-800 py-6 px-6 rounded-3xl ">
+    <div className=" md:w-1/2 sm:w-full xs:w-full bg-gray-800 py-6 px-6 rounded-3xl ">
       <div className="flex justify-between text-white items-center mb-8">
         <p className="text-2xl font-bold">Login</p>
 

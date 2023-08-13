@@ -9,13 +9,14 @@ import {
   faBedPulse,
   faGear,
   faSearch,
+  faSignOut
 } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import LoginLayout from '../dashboard/loginLayout';
 import LoginPage from './login';
 
 
-library.add(faUsers, faUserNurse, faHome, faBedPulse, faGear, faSearch);
+library.add(faUsers, faUserNurse, faHome, faBedPulse, faGear, faSearch, faSignOut);
 
 function MyApp({ Component, pageProps }) {
   const isLoginPage = Component === LoginPage;
