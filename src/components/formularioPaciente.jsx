@@ -3,9 +3,54 @@ import { forwardRef, useEffect, useState } from 'react';
 
 
 
-const FormularioPaciente = () => {
+const FormularioPaciente = (tipo) => {
 
-  const [register, setValue] = useState([])
+  const [paciente, setPaciente] = useState({
+    cpf: '',
+    nome: '',
+    rg: '',
+    num_sus: '',
+    datNascimento: '',
+    endereco: {
+      cep: '',
+      rua: '',
+      numero: '',
+      bairro: '',
+      cidade: '',
+      uf: ''
+    },
+    contato: {
+      telefone_1: '',
+      telefone_2: '',
+      email_1: '',
+      email_2: ''
+    }
+  })
+
+  const handleInputChange = (event) => {
+    console.log('handleInputChange called'); // Check if this message appears in the console
+    const { name, value } = event.target;
+    console.log('Field Name:', name); // Check the field name being updated
+    console.log('New Value:', value); // Check the new value being set
+    const nestedField = name.split('.'); // Split nested field name
+  
+    if (nestedField.length === 2) {
+      // Update nested field within endereco or contato
+      setPaciente((prevPaciente) => ({
+        ...prevPaciente,
+        [nestedField[0]]: {
+          ...prevPaciente[nestedField[0]],
+          [nestedField[1]]: value,
+        },
+      }));
+    } else {
+      // Update top-level field
+      setPaciente((prevPaciente) => ({
+        ...prevPaciente,
+        [name]: value,
+      }));
+    }
+  };
 
   const checkCEP = (e) => {
       const cep = document.querySelector('#cep').value.replace(/\D/g,'')
@@ -22,52 +67,164 @@ const FormularioPaciente = () => {
       
   }
 
+  const cadastrarPaciente = (id) => {
+    fetch(`http://localhost:3000/paciente`, {
+      method:'POST',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify(paciente)
+    })
+      .then(res => {
+        if (res.ok) {
+          console.log('Paciente atualizado') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
+        }
+      })
+  }
+
+  // const handleSubmit = () => {
+  //   fetch('http://localhost:3030/paciente', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(paciente)
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log('Paciente cadastrado:', data);
+  //       // Aqui você pode adicionar lógica adicional após o cadastro, como redirecionar ou exibir uma mensagem de sucesso.
+  //     })
+  //     .catch((error) => {
+  //       console.error('Erro ao cadastrar paciente:', error);
+  //     });
+  // };
+  
+
   return (
-    <div className="flex w-full justify-center  ">
-      <div className="m-12 p-6 rounded-2xl bg-gray-900 w-80 text-white">
-        <p className="font-bold self-center-">Dados passoais</p>
-        <br />
-        <Field label="Nome completo" name="nome" placeholder="nome" />
-        <Field label="CPF" name="cpf" placeholder="cpf"  />  
-        <Field label="RG" name="rg" placeholder="rg"  /> 
-        {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
-        <Field label="Data de nascimento" name="datanasc" placeholder="01/01/1999" type="date"  /> 
-        <Field label="SUS" name="susnum" placeholder="65654646464643"  /> 
+    <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 mt-20">
+      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
+      <p className="font-bold self-center">Dados passoais</p>
+      <br />
+      <Field
+        label="Nome completo"
+        name="nome"
+        placeholder="nome"
+        value={paciente.nome}
+        onChange={handleInputChange}
+      />
+      <Field
+        label="CPF"
+        name="cpf"
+        placeholder="cpf"
+        value={paciente.cpf}
+        onChange={handleInputChange}
+      />
+      <Field
+        label="RG"
+        name="rg"
+        placeholder="rg"
+        value={paciente.rg}
+        onChange={handleInputChange}
+      />
+      <Field
+        label="Data de nascimento"
+        name="datanasc"
+        placeholder="01/01/1999"
+        type="date"
+        value={paciente.datNascimento}
+        onChange={handleInputChange}
+      />
+      <Field
+        label="SUS"
+        name="num_sus"
+        placeholder="65654646464643"
+        value={paciente.num_sus}
+        onChange={handleInputChange}
+      />
       </div>
     
 
 
-      <div className="m-12 p-6 rounded-2xl bg-gray-900 w-80 text-white">
-        <p className="font-bold self-center-">Endereço</p>
+      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
+        <p className="font-bold self-center">Endereço</p>
         <br />
         <span className='flex  items-center gap-2 p-0 m-0'>
-          <Field label="Cep" name="cep" id="cep" placeholder="cep"/>
+          <Field label="Cep"
+            name="cep"
+            placeholder="cep"
+            value={paciente.endereco.cep}
+            onChange={handleInputChange}
+
+          />
           <button className="rounded bg-red-500 h-11 w-11 mt-1" onClick={checkCEP}><FontAwesomeIcon  icon='search'/></button>
         </span>
         
-        <Field label="Rua" name="rua" id="rua" placeholder="rua" />  
-        <Field label="Número" name="num" placeholder="0000"  /> 
+        <Field label="Rua"
+          name="rua"
+          id="rua"
+          placeholder="rua"
+          value={paciente.endereco.rua}
+          onChange={handleInputChange}
+        />  
+        <Field label="Número" 
+          name="numero"
+          placeholder="0000"
+          value={paciente.endereco.numero}
+          onChange={handleInputChange}
+        /> 
         {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
-        <Field label="Bairro" name="bairro" placeholder="bairro"  /> 
-        <span className='flex  items-center gap-2 p-0 m-0'>
-          <Field label="Cidade" name="cidade" placeholder="Serra Talhada" />
-          <Field label="Estado" name="uf" placeholder="PE" />
+        <Field label="Bairro"
+          name="bairro"
+          placeholder="bairro"
+          value={paciente.endereco.bairro}
+          onChange={handleInputChange}
+        /> 
+        <span className='flex  w-full items-center gap-2 p-0 m-0'>
+          <Field label="Cidade"
+            name="cidade"
+            placeholder="Serra Talhada"
+            value={paciente.endereco.cidade}
+            onChange={handleInputChange}
+          />
+          <Field label="Estado"
+            name="uf"
+            placeholder="PE"
+            value={paciente.endereco.uf}
+            onChange={handleInputChange}
+          />
         </span>
       </div>
 
 
 
-      <div className="flex flex-col m-12">
-        <div className=" p-6 rounded-2xl bg-gray-900 w-80 text-white">
-          <p className="font-bold self-center-">Contato</p>
+      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
+          <p className="font-bold self-center">Contato</p>
           <br />
-          <Field label="Telefone 1" name="fone" placeholder="87 99999999"  />  
-          <Field label="Telefone 2" name="fone" placeholder="87 99999999"  /> 
-          <Field label="E-mail 1" name="email" placeholder="usuario@dominio.com"  /> 
-          <Field label="E-mail 2" name="email" placeholder="usuario@dominio.com"  /> 
-          
-        </div>
-        <button className="rounded bg-red-500 h-11 mt-12 text-white">Cadastrar</button>
+          <Field label="Telefone 1"
+            name="telefone_1"
+            placeholder="87 99999999"
+            value={paciente.contato.telefone_1}
+            onChange={handleInputChange}
+          />  
+          <Field label="Telefone 2"
+            name="telefone_2"
+            placeholder="87 99999999"
+            value={paciente.contato.telefone_2}
+            onChange={handleInputChange}
+          /> 
+          <Field label="E-mail 1"
+            name="email_1"
+            placeholder="usuario@dominio.com"
+            value={paciente.contato.email_1}
+            onChange={handleInputChange}
+          /> 
+          <Field label="E-mail 2"
+          name="email_2"
+          placeholder="usuario@dominio.com"
+          value={paciente.contato.email_2}
+          onChange={handleInputChange}
+          /> 
+        
+        <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={cadastrarPaciente(1)}>Cadastrar</button>
       </div>
     </div>
 )
@@ -110,25 +267,6 @@ const Field = forwardRef(
           ref={ref}
           {...rest}
         />
-      );
-    }
-
-    // if you won't use checkbox, you can delete this part and the classes checkbox, checkboxContainer and checkboxLabel
-    if (type === 'checkbox') {
-      component = (
-        <div className={style.checkboxContainer}>
-          <input
-            aria-required={dot}
-            aria-invalid={!!error}
-            className={`${style.checkbox} ${disabled ? style.disabled : ''}`}
-            disabled={disabled}
-            id={name}
-            name={name}
-            type="checkbox"
-            {...rest}
-          />
-          <span className={style.checkboxLabel} />
-        </div>
       );
     }
 
