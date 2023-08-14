@@ -1,30 +1,29 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-
 const data = [
   {
     title: 'Página Inicial',
-    icon: <FontAwesomeIcon className='h-6 w-6' icon='home' />,
+    icon: <FontAwesomeIcon className="h-6 w-6" icon="home" />,
     link: '/',
   },
   {
     title: 'Pacientes',
-    icon: <FontAwesomeIcon className='h-6 w-6' icon='users' />,
+    icon: <FontAwesomeIcon className="h-6 w-6" icon="users" />,
     link: '/admin/paciente/pacientes',
   },
   {
     title: 'Funcionários',
-    icon: <FontAwesomeIcon className='h-6 w-6' icon='user-nurse'/>,
+    icon: <FontAwesomeIcon className="h-6 w-6" icon="user-nurse" />,
     link: '/admin/funcionarios',
   },
   {
     title: 'Procedimentos',
-    icon: <FontAwesomeIcon icon='bed-pulse' />,
+    icon: <FontAwesomeIcon icon="bed-pulse" />,
     link: '/admin/procedimentos',
   },
   {
     title: 'Configurações',
-    icon: <FontAwesomeIcon className='h-6 w-6' icon='gear'/>,
+    icon: <FontAwesomeIcon className="h-6 w-6" icon="gear" />,
     link: '/admin/configuracoes',
   },
   {
@@ -32,7 +31,6 @@ const data = [
     icon: <FontAwesomeIcon className='h-6 w-6' icon='sign-out' color='#ee6b6e'/>,
     link: '/login',
   },
-
 ];
 
 export default data;
