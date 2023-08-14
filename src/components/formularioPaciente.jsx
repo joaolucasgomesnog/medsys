@@ -1,56 +1,87 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { forwardRef, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 
 
 const FormularioPaciente = (tipo) => {
-
+  const router = useRouter()
+  const [endereco, setEndereco] = useState({
+    cep: '',
+    rua: '',
+    numero: '',
+    bairro: '',
+    cidade: '',
+    uf: ''
+  })
+  const [contato, setContato] = useState({
+    telefone_1: '',
+    telefone_2: '',
+    email_1: '',
+    email_2: ''
+  })
   const [paciente, setPaciente] = useState({
     cpf: '',
     nome: '',
     rg: '',
     num_sus: '',
-    datNascimento: '',
-    endereco: {
-      cep: '',
-      rua: '',
-      numero: '',
-      bairro: '',
-      cidade: '',
-      uf: ''
-    },
-    contato: {
-      telefone_1: '',
-      telefone_2: '',
-      email_1: '',
-      email_2: ''
-    }
+    datNascimento: "",
+    num_sus: "",
+    endereco: endereco,
+    contato: contato
   })
 
-  const handleInputChange = (event) => {
-    console.log('handleInputChange called'); // Check if this message appears in the console
-    const { name, value } = event.target;
-    console.log('Field Name:', name); // Check the field name being updated
-    console.log('New Value:', value); // Check the new value being set
-    const nestedField = name.split('.'); // Split nested field name
-  
-    if (nestedField.length === 2) {
-      // Update nested field within endereco or contato
-      setPaciente((prevPaciente) => ({
-        ...prevPaciente,
-        [nestedField[0]]: {
-          ...prevPaciente[nestedField[0]],
-          [nestedField[1]]: value,
-        },
-      }));
-    } else {
-      // Update top-level field
-      setPaciente((prevPaciente) => ({
-        ...prevPaciente,
-        [name]: value,
-      }));
-    }
+  const handleDateBlur = (e) => {
+    const isoDate = convertToISO8601Complete(e.target.value);
+    handleInputChangePaciente({
+      target: {
+        name: "datNascimento",
+        value: isoDate,
+      },
+    });
   };
+  
+  function convertToISO8601Complete(dateTimeString) {
+    const [datePart] = dateTimeString.split(" ");
+    const [year, month, day] = datePart.split("-");
+    const isoDateTime = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T00:00:00Z`;
+    return isoDateTime;
+  }
+
+  const handleInputChangePaciente = (e) => {
+    const { name, value } = e.target;
+    setPaciente((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleNumero = (e) => {
+    const numero = Number(e.target.value)
+    handleInputChangeEndereco({
+      target: {
+        name: "numero",
+        value: numero
+      }
+    });
+  };
+
+  const handleInputChangeEndereco = (e) => {
+    const { name, value } = e.target;
+    setEndereco((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    paciente.endereco = endereco
+  };
+  const handleInputChangeContato = (e) => {
+    const { name, value } = e.target;
+    setContato((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    paciente.contato = contato
+  };
+
 
   const checkCEP = (e) => {
       const cep = document.querySelector('#cep').value.replace(/\D/g,'')
@@ -59,6 +90,10 @@ const FormularioPaciente = (tipo) => {
       .then(res => res.json())
       .then(dados => {
         console.log(dados)
+        endereco.bairro = dados.bairro
+        endereco.rua = dados.logradouro
+        endereco.cidade = dados.localidade
+        endereco.uf = dados.uf
         document.querySelector('#rua').value = dados.logradouro
         document.querySelector('#bairro').value = dados.bairro
         document.querySelector('#cidade').value = dados.localidade
@@ -67,36 +102,21 @@ const FormularioPaciente = (tipo) => {
       
   }
 
-  const cadastrarPaciente = (id) => {
-    fetch(`http://localhost:3000/paciente`, {
+  const cadastrarPaciente = (pacienteData) => {
+    fetch(`http://localhost:3030/paciente`, {
       method:'POST',
       headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify(paciente)
+      body: JSON.stringify(pacienteData)
     })
       .then(res => {
         if (res.ok) {
-          console.log('Paciente atualizado') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
+          console.log('Paciente cadastrado') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
+          router.push('/admin/paciente/pacientes')
         }
+
       })
   }
 
-  // const handleSubmit = () => {
-  //   fetch('http://localhost:3030/paciente', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(paciente)
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log('Paciente cadastrado:', data);
-  //       // Aqui você pode adicionar lógica adicional após o cadastro, como redirecionar ou exibir uma mensagem de sucesso.
-  //     })
-  //     .catch((error) => {
-  //       console.error('Erro ao cadastrar paciente:', error);
-  //     });
-  // };
   
 
   return (
@@ -109,36 +129,35 @@ const FormularioPaciente = (tipo) => {
         name="nome"
         placeholder="nome"
         value={paciente.nome}
-        onChange={handleInputChange}
+        onChange={handleInputChangePaciente}
       />
       <Field
         label="CPF"
         name="cpf"
         placeholder="cpf"
         value={paciente.cpf}
-        onChange={handleInputChange}
+        onChange={handleInputChangePaciente}
       />
       <Field
         label="RG"
         name="rg"
         placeholder="rg"
         value={paciente.rg}
-        onChange={handleInputChange}
+        onChange={handleInputChangePaciente}
       />
       <Field
         label="Data de nascimento"
-        name="datanasc"
+        name="datNascimento"
         placeholder="01/01/1999"
         type="date"
-        value={paciente.datNascimento}
-        onChange={handleInputChange}
+        onBlur={handleDateBlur}
       />
       <Field
         label="SUS"
         name="num_sus"
         placeholder="65654646464643"
         value={paciente.num_sus}
-        onChange={handleInputChange}
+        onChange={handleInputChangePaciente}
       />
       </div>
     
@@ -151,8 +170,8 @@ const FormularioPaciente = (tipo) => {
           <Field label="Cep"
             name="cep"
             placeholder="cep"
-            value={paciente.endereco.cep}
-            onChange={handleInputChange}
+            value={endereco.cep}
+            onChange={handleInputChangeEndereco}
 
           />
           <button className="rounded bg-red-500 h-11 w-11 mt-1" onClick={checkCEP}><FontAwesomeIcon  icon='search'/></button>
@@ -162,34 +181,34 @@ const FormularioPaciente = (tipo) => {
           name="rua"
           id="rua"
           placeholder="rua"
-          value={paciente.endereco.rua}
-          onChange={handleInputChange}
+          value={endereco.rua}
+          onChange={handleInputChangeEndereco}
         />  
         <Field label="Número" 
           name="numero"
           placeholder="0000"
-          value={paciente.endereco.numero}
-          onChange={handleInputChange}
+          value={endereco.numero}
+          onChange={handleNumero}
         /> 
         {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
         <Field label="Bairro"
           name="bairro"
           placeholder="bairro"
-          value={paciente.endereco.bairro}
-          onChange={handleInputChange}
+          value={endereco.bairro}
+          onChange={handleInputChangeEndereco}
         /> 
         <span className='flex  w-full items-center gap-2 p-0 m-0'>
           <Field label="Cidade"
             name="cidade"
             placeholder="Serra Talhada"
-            value={paciente.endereco.cidade}
-            onChange={handleInputChange}
+            value={endereco.cidade}
+            onChange={handleInputChangeEndereco}
           />
           <Field label="Estado"
             name="uf"
             placeholder="PE"
-            value={paciente.endereco.uf}
-            onChange={handleInputChange}
+            value={endereco.uf}
+            onChange={handleInputChangeEndereco}
           />
         </span>
       </div>
@@ -202,29 +221,29 @@ const FormularioPaciente = (tipo) => {
           <Field label="Telefone 1"
             name="telefone_1"
             placeholder="87 99999999"
-            value={paciente.contato.telefone_1}
-            onChange={handleInputChange}
+            value={contato.telefone_1}
+            onChange={handleInputChangeContato}
           />  
           <Field label="Telefone 2"
             name="telefone_2"
             placeholder="87 99999999"
-            value={paciente.contato.telefone_2}
-            onChange={handleInputChange}
+            value={contato.telefone_2}
+            onChange={handleInputChangeContato}
           /> 
           <Field label="E-mail 1"
             name="email_1"
             placeholder="usuario@dominio.com"
-            value={paciente.contato.email_1}
-            onChange={handleInputChange}
+            value={contato.email_1}
+            onChange={handleInputChangeContato}
           /> 
           <Field label="E-mail 2"
           name="email_2"
           placeholder="usuario@dominio.com"
-          value={paciente.contato.email_2}
-          onChange={handleInputChange}
+          value={contato.email_2}
+          onChange={handleInputChangeContato}
           /> 
         
-        <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={cadastrarPaciente(1)}>Cadastrar</button>
+        <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={()=>{cadastrarPaciente(paciente)}}>Cadastrar</button>
       </div>
     </div>
 )

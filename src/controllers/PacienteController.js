@@ -64,15 +64,26 @@ export default {
             return res.json({ error })
         }
     },
-    async findPacienteByNome(req, res) {
+    async findPacienteByAll(req, res) {
         try {
-            const { nome } = req.params
-            const paciente = await prisma.paciente.findUnique({ where: { nome: { contains: nome } } })
-            if (!paciente) return res.json({ error: "Usuário não existe" })
-            return res.json(paciente)
-
+            const { nome } = req.params;
+            const pacientes = await prisma.$queryRaw`
+            SELECT * FROM "Paciente"
+            WHERE LOWER("nome") LIKE ${`%${nome.toLowerCase()}%`}
+            OR "cpf" LIKE ${`%${nome}%`}
+            OR "num_sus" LIKE ${`%${nome}%`}
+            OR "rg" LIKE ${`%${nome}%`};
+            
+        `;
+    
+            if (!pacientes || pacientes.length === 0) {
+                return res.json({ error: "Usuário não existe" });
+            }
+    
+            return res.json(pacientes);
         } catch (error) {
-            return res.json({ error })
+            console.error("Erro ao buscar pacientes:", error);
+            return res.status(500).json({ error: "Ocorreu um erro ao buscar pacientes." });
         }
     },
     async updatePaciente(req, res) {

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { forwardRef, useState , useEffect} from 'react';
 
 
-export default function Table() {
+export default function Table({nome}) {
     const [pacientes, setPacientes] = useState([])
     const getPacientes = () => {
         fetch("http://localhost:3030/pacientes")
@@ -14,16 +14,30 @@ export default function Table() {
             
         })
     }
+    const getPacientesbyAll = (nome) => {
+        fetch(`http://localhost:3030/paciente/search/${nome}`)
+        .then(res => res.json())
+        .then(dados => {
+            console.log(dados)
+            setPacientes(dados)
+            
+        })
+    }
 
     useEffect(() => {
-        getPacientes()   
-    },[])
+        if (nome == "") {
+            getPacientes()
+        }else{
+            getPacientesbyAll(nome)
+        }
+        
+    },[nome])
 
     return (
         <div>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table className="w-full text-sm text-left text-gray-400">
+                    <thead className="text-xs uppercase bg-gray-700 text-gray-400">
                         <tr>
                             <th scope="col" className="p-4">
                                 CPF
@@ -44,9 +58,9 @@ export default function Table() {
                         </tr>
                     </thead>
                     <tbody>
-                        {
+                        {   
                             pacientes.map((paciente) =>
-                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <tr className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600">
                                     <td className="px-6 py-4">{paciente.cpf}</td>
                                     <td className="px-6 py-4">{paciente.nome}</td>
                                     <td className="px-6 py-4">{paciente.rg}</td>
