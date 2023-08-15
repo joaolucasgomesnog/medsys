@@ -30,6 +30,7 @@ const FormularioPaciente = (tipo) => {
     endereco: endereco,
     contato: contato
   })
+  
 
   const handleDateBlur = (e) => {
     const isoDate = convertToISO8601Complete(e.target.value);
@@ -120,7 +121,7 @@ const FormularioPaciente = (tipo) => {
   
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 mt-20">
+    <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 ">
       <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
       <p className="font-bold self-center">Dados passoais</p>
       <br />
@@ -166,17 +167,19 @@ const FormularioPaciente = (tipo) => {
       <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
         <p className="font-bold self-center">Endereço</p>
         <br />
-        <span className='flex  items-center gap-2 p-0 m-0'>
+        <span className="relative w-full">
           <Field label="Cep"
             name="cep"
             placeholder="cep"
             value={endereco.cep}
             onChange={handleInputChangeEndereco}
-
+            onBlur={checkCEP}
+            
           />
-          <button className="rounded bg-red-500 h-11 w-11 mt-1" onClick={checkCEP}><FontAwesomeIcon  icon='search'/></button>
+          <span className="absolute inset-y-0 right-0 pr-3 flex items-center" onClick={checkCEP} >
+            <FontAwesomeIcon icon="search" className="text-gray-400" />
+          </span>
         </span>
-        
         <Field label="Rua"
           name="rua"
           id="rua"
