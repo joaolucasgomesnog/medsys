@@ -7,6 +7,7 @@ import { useToggle } from '../provider/context';
 // Import para signout
 import { auth } from '../../services/firebaseConfig';
 
+
 const style = {
   title: `mx-4 text-sm`,
   active: `bg-gray-700 rounded-full`,
