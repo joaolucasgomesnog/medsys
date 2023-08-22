@@ -1,8 +1,11 @@
 import Content from '../components/content';
+import PrivateRoute from '../components/privateRoute';
 //import Block from '../components/block';
 
 export default function HomePage() {
-  return<Content title="Página Inicial">
-
-    </Content>;
+  return (
+    <PrivateRoute>
+      <Content title="Página Inicial"></Content>
+    </PrivateRoute>
+  );
 }

@@ -6,15 +6,13 @@ const PrivateRoute = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const user = auth.currentUser;
+    const unsubscribe = auth.onAuthStateChanged(user => {
       if (!user) {
         router.replace('/login');
       }
-    }, 500); // Verifica a cada 1 segundo
+    });
 
-    return () => clearInterval(interval);
-
+    return () => unsubscribe();
   }, []);
 
   return children;

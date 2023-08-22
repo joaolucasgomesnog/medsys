@@ -1,7 +1,10 @@
 import Content from '../../components/content';
+import PrivateRoute from '../../components/privateRoute';
 
 export default function Configuracoes() {
-  return <Content title="Configuracoes">
-    
-  </Content>;
+  return (
+    <PrivateRoute>
+      <Content title="Configuracoes"></Content>
+    </PrivateRoute>
+  );
 }

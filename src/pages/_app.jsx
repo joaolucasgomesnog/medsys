@@ -40,7 +40,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <PrivateRoute>
+     
         <Head>
           <title>MedSys</title>
         </Head>
@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />
           </DashboardLayout>
         )}
-      </PrivateRoute>
+   
     </>
   );
 }
