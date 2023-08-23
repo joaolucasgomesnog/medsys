@@ -8,7 +8,7 @@ const PrivateRoute = ({ children }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (!user) {
-        router.replace('/login'); // Redireciona para a página de login se não estiver logado
+        router.replace('/login');
       }
     });
 

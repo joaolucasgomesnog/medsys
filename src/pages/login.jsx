@@ -2,20 +2,30 @@ import { useState, useEffect } from 'react';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../services/firebaseConfig';
 import { useRouter } from 'next/router';
+import { signOut } from 'firebase/auth';
 
 function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
   // signOut
- 
   useEffect(() => {
+    const user = auth.currentUser;
     if (user) {
-      router.push('/');
+      logout();
     }
-  }, [user, router]);
+  }, []);
 
   function handleSignInOut(e) {
     e.preventDefault();
@@ -37,11 +47,7 @@ function LoginPage() {
   }
 
   return (
-    <><head>
-      <meta httpEquiv="cache-control" content="no-cache, no-store, must-revalidate" />
-      <meta httpEquiv="pragma" content="no-cache" />
-      <meta httpEquiv="expires" content="0" />
-    </head>
+    <>
       <div className="flex flex-wrap h-full w-full justify-center items-center text-white ">
         <div className=" md:w-1/2 sm:w-full xs:w-full bg-gray-800 py-6 px-6 rounded-3xl ">
           <div className="flex justify-between text-white items-center mb-8">
@@ -54,7 +60,8 @@ function LoginPage() {
                 className="text-base relative flex flex-1 w-full mt-1 rounded-md py-2 px-4 bg-transparent text-white placeholder-gray-400 text-base focus:outline-none focus:ring-1 focus:border-transparent border"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} />
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div>
               Senha:
@@ -62,7 +69,8 @@ function LoginPage() {
                 className="text-base relative flex flex-1 w-full mt-1 rounded-md py-2 px-4 bg-transparent text-white placeholder-gray-400 text-base focus:outline-none focus:ring-1 focus:border-transparent border"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} />
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
           </div>
           <div className="flex justify-end">
@@ -74,8 +82,8 @@ function LoginPage() {
             </button>
           </div>
         </div>
-      </div></>
-
+      </div>
+    </>
   );
 }
 

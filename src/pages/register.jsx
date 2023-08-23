@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '../services/firebaseConfig';
+import { auth } from '../services/firebase';
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
