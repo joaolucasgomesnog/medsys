@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 
 
-const FormularioPaciente = (tipo) => {
+const FormularioPaciente = (props) => {
   const router = useRouter()
   const [endereco, setEndereco] = useState({
     cep: '',
@@ -30,7 +30,36 @@ const FormularioPaciente = (tipo) => {
     endereco: endereco,
     contato: contato
   })
-  
+
+  const getPacientebyid = (idNum) => {
+    fetch(`http://localhost:3030/paciente/${idNum}`)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Erro na requisição: ${res.status} ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then(dados => {
+        setEndereco(dados.endereco)
+        setContato(dados.contato)
+        setPaciente(dados);
+        console.log(dados);
+        console.log(dados.endereco);
+        console.log(dados.contato);
+      })
+      .catch(error => {
+        console.error('Erro na requisição:', error);
+      });
+  };
+
+  useEffect(() => {
+    console.log(props.id)
+    if (props.id != null) {
+      getPacientebyid(props.id);
+    }
+  }, [props.id]);
+
+
 
   const handleDateBlur = (e) => {
     const isoDate = convertToISO8601Complete(e.target.value);
@@ -41,7 +70,7 @@ const FormularioPaciente = (tipo) => {
       },
     });
   };
-  
+
   function convertToISO8601Complete(dateTimeString) {
     const [datePart] = dateTimeString.split(" ");
     const [year, month, day] = datePart.split("-");
@@ -100,7 +129,7 @@ const FormularioPaciente = (tipo) => {
         document.querySelector('#cidade').value = dados.localidade
         document.querySelector('#uf').value = dados.uf
       })
-      
+
   }
 
   const cadastrarPaciente = (pacienteData) => {
@@ -118,7 +147,22 @@ const FormularioPaciente = (tipo) => {
       })
   }
 
-  
+  const atualizarPaciente = (pacienteData) => {
+    fetch(`http://localhost:3030/paciente/${props.id}`, {
+      method:'PUT',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify(pacienteData)
+    })
+      .then(res => {
+        if (res.ok) {
+          console.log('Paciente atualizado') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
+          router.push('/admin/paciente/pacientes')
+        }
+
+      })
+  }
+
+
 
   return (
     <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 ">
@@ -161,7 +205,7 @@ const FormularioPaciente = (tipo) => {
         onChange={handleInputChangePaciente}
       />
       </div>
-    
+
 
 
       <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
@@ -174,7 +218,7 @@ const FormularioPaciente = (tipo) => {
             value={endereco.cep}
             onChange={handleInputChangeEndereco}
             onBlur={checkCEP}
-            
+
           />
           <span className="absolute inset-y-0 right-0 pr-3 flex items-center" onClick={checkCEP} >
             <FontAwesomeIcon icon="search" className="text-gray-400" />
@@ -186,20 +230,20 @@ const FormularioPaciente = (tipo) => {
           placeholder="rua"
           value={endereco.rua}
           onChange={handleInputChangeEndereco}
-        />  
-        <Field label="Número" 
+        />
+        <Field label="Número"
           name="numero"
           placeholder="0000"
           value={endereco.numero}
           onChange={handleNumero}
-        /> 
+        />
         {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
         <Field label="Bairro"
           name="bairro"
           placeholder="bairro"
           value={endereco.bairro}
           onChange={handleInputChangeEndereco}
-        /> 
+        />
         <span className='flex  w-full items-center gap-2 p-0 m-0'>
           <Field label="Cidade"
             name="cidade"
@@ -226,27 +270,33 @@ const FormularioPaciente = (tipo) => {
             placeholder="87 99999999"
             value={contato.telefone_1}
             onChange={handleInputChangeContato}
-          />  
+          />
           <Field label="Telefone 2"
             name="telefone_2"
             placeholder="87 99999999"
             value={contato.telefone_2}
             onChange={handleInputChangeContato}
-          /> 
+          />
           <Field label="E-mail 1"
             name="email_1"
             placeholder="usuario@dominio.com"
             value={contato.email_1}
             onChange={handleInputChangeContato}
-          /> 
+          />
           <Field label="E-mail 2"
           name="email_2"
           placeholder="usuario@dominio.com"
           value={contato.email_2}
           onChange={handleInputChangeContato}
-          /> 
-        
-        <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={()=>{cadastrarPaciente(paciente)}}>Cadastrar</button>
+          />
+
+        <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={()=>{
+          if (props.tipo == 'Cadastrar') {
+            cadastrarPaciente(paciente)
+        }else if (props.tipo == 'Atualizar') {
+            atualizarPaciente(paciente)
+        }
+        }}>{props.tipo}</button>
       </div>
     </div>
 )

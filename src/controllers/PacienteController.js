@@ -56,7 +56,7 @@ export default {
     async findPacienteById(req, res) {
         try {
             const { id } = req.params
-            const paciente = await prisma.paciente.findUnique({ where: { id: Number(id) } })
+            const paciente = await prisma.paciente.findUnique({ where: { id: Number(id) }, include : {endereco: true, contato: true}})
             if (!paciente) return res.json({ error: "Usuário não existe" })
             return res.json(paciente)
 

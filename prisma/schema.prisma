@@ -14,9 +14,10 @@ model Endereco {
   id         Int          @id @default(autoincrement())
   cep        String? // O sinal de interrogação torna o campo opcional
   rua        String
-  numero     Int
+  numero     String //botei o numero como string porque as vezes o número da casa contém letra
   bairro     String
   cidade     String
+  uf         String       @default("PE")
   Paciente   Paciente[]
   Enfermeira Enfermeira[]
   Medico     Medico[]

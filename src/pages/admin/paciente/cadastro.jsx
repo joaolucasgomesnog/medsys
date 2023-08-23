@@ -4,7 +4,7 @@ import FormularioPaciente from '../../../components/formularioPaciente'
 
 export default function PacientesPage() {
   return <Content title="Cadastro de paciente">
-    <FormularioPaciente/>
+    <FormularioPaciente tipo={'Cadastrar'}/>
   </Content>;
 
 }

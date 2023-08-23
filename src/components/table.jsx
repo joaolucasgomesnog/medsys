@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { forwardRef, useState , useEffect} from 'react';
 import ReactPaginate from 'react-paginate';
-
+import Router, { useRouter } from 'next/router';
 
 export default function Table({nome}) {
+    const router = useRouter()
     const [pacientes, setPacientes] = useState([])
     const getPacientes = () => {
         fetch("http://localhost:3030/pacientes")
@@ -83,7 +84,7 @@ export default function Table({nome}) {
                                     <td className="pl-15 py-4 justify-center">
                                         <span className='flex flex-row space-x-2'>
                                             <button className='rounded-md h-6 w-6  bg-transparent text-white placeholder-gray-400  focus:outline-none focus:ring-1 border-gray-400 border'>
-                                                <FontAwesomeIcon icon="pencil" className="text-gray-400" />
+                                                <FontAwesomeIcon icon="pencil" className="text-gray-400" onClick={() => {router.push(`/admin/paciente/editar/${paciente.id}`)}}/>
                                             </button>
                                             <button className='rounded-md h-6 w-6  bg-transparent text-white placeholder-gray-400  focus:outline-none focus:ring-1 border-gray-400 border'>
                                                 <FontAwesomeIcon icon="trash" className="text-gray-400" />
