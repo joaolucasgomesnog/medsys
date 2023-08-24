@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { forwardRef, useState , useEffect} from 'react';
 import ReactPaginate from 'react-paginate';
 import Router, { useRouter } from 'next/router';
+import Loading from './loading';
+import toggleLoading from './toggleLoading'
 
 export default function Table({nome}) {
     const router = useRouter()
@@ -27,12 +29,13 @@ export default function Table({nome}) {
     }
 
     useEffect(() => {
+        toggleLoading()
         if (nome == "") {
             getPacientes()
         }else{
             getPacientesbyAll(nome)
         }
-        
+        toggleLoading()
     },[nome])
 
     const itemsPerPage = 10; // Quantidade de itens por página
@@ -51,6 +54,7 @@ export default function Table({nome}) {
 
     return (
         <div>
+            <Loading/>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-400">
                     <thead className="text-xs uppercase bg-gray-700 text-gray-400">

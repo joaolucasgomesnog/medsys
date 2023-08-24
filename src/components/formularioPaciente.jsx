@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { forwardRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
-
+import toggleLoading from './toggleLoading';
+import Loading from './loading';
 
 const FormularioPaciente = (props) => {
   const router = useRouter()
@@ -32,6 +32,7 @@ const FormularioPaciente = (props) => {
   })
 
   const getPacientebyid = (idNum) => {
+    toggleLoading()
     fetch(`http://localhost:3030/paciente/${idNum}`)
       .then(res => {
         if (!res.ok) {
@@ -46,6 +47,7 @@ const FormularioPaciente = (props) => {
         console.log(dados);
         console.log(dados.endereco);
         console.log(dados.contato);
+        toggleLoading()
       })
       .catch(error => {
         console.error('Erro na requisição:', error);
@@ -165,7 +167,9 @@ const FormularioPaciente = (props) => {
 
 
   return (
+    
     <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 ">
+      <Loading/>
       <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
       <p className="font-bold self-center">Dados passoais</p>
       <br />

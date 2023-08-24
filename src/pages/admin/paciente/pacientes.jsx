@@ -15,6 +15,7 @@ export default function PacientesPage() {
 
   return (
     <PrivateRoute>
+
       <Content title="Pacientes">
         <div className="flex row gap-3">
           <div className="relative w-full">
