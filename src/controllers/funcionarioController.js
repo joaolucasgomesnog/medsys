@@ -44,10 +44,14 @@ export default {
         }
     },
 
-    async findAllPacientes(req, res) {
+    async findAllFuncionarios(req, res) {
         try {
-            const pacientes = await prisma.paciente.findMany()
-            return res.json(pacientes)
+            
+            const medicos = await prisma.medico.findMany()
+            const atendentes = await prisma.atendente.findMany()
+            const enferemeiras = await prisma.enfermeira.findMany()
+            const funcionarios = medicos + atendentes + enferemeiras
+            return res.json(funcionarios)
 
         } catch (error) {
             return res.json({ error })

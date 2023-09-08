@@ -3,6 +3,7 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../services/firebaseConfig';
 import { useRouter } from 'next/router';
 import { signOut } from 'firebase/auth';
+import Loading from '../components/loading';
 
 function LoginPage() {
   const router = useRouter();
@@ -40,7 +41,7 @@ function LoginPage() {
     );
   }
   if (loading) {
-    return <p>Loading...</p>;
+    <Loading/>
   }
   if (user) {
     router.push('/');
@@ -51,7 +52,7 @@ function LoginPage() {
       <div className="flex flex-wrap h-full w-full justify-center items-center text-white ">
         <div className=" md:w-1/2 sm:w-full xs:w-full bg-gray-800 py-6 px-6 rounded-3xl ">
           <div className="flex justify-between text-white items-center mb-8">
-            <p className="text-2xl font-bold">Login</p>
+            <p className="text-2xl font-bold">Entrar</p>
           </div>
           <div className="flex flex-col gap-5">
             <div>
