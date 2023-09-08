@@ -4,38 +4,11 @@ const prisma = new PrismaClient()
 
 export default {
 
-    async createFuncionario(req, res) {
-        const { cpf, nome, rg, datNascimento, num_sus, endereco, contato } = req.body;
-
+    async findAllFuncionarios(req, res) {
         try {
-            const paciente = await prisma.paciente.create({
-                data: {
-                    cpf: cpf,
-                    nome: nome,
-                    rg: rg,
-                    datNascimento: datNascimento,
-                    num_sus: num_sus,
-                    endereco: {
-                        create: {
-                            cep: endereco.cep,
-                            rua: endereco.rua,
-                            numero: endereco.numero,
-                            bairro: endereco.bairro,
-                            cidade: endereco.cidade
-                        }
-                    },
-                    contato: {
-                        create: {
-                            email_1: contato.email_1,
-                            telefone_1: contato.telefone_1
-                        }
-                    },
-                },
-                include: {
-                    endereco: true,
-                    contato: true
-                }
-            });
+            const atendentes = await prisma.atendente.findMany()
+            const enfemeiros = await prisma.enfermeira.findMany()
+            const medicos = await prisma.medico.findMany()
 
             res.json(paciente);
         } catch (error) {
@@ -44,14 +17,10 @@ export default {
         }
     },
 
-    async findAllFuncionarios(req, res) {
+    async findAllPacientes(req, res) {
         try {
-            
-            const medicos = await prisma.medico.findMany()
-            const atendentes = await prisma.atendente.findMany()
-            const enferemeiras = await prisma.enfermeira.findMany()
-            const funcionarios = medicos + atendentes + enferemeiras
-            return res.json(funcionarios)
+            const pacientes = await prisma.paciente.findMany()
+            return res.json(pacientes)
 
         } catch (error) {
             return res.json({ error })
@@ -64,84 +33,6 @@ export default {
             if (!paciente) return res.json({ error: "Usuário não existe" })
             return res.json(paciente)
 
-        } catch (error) {
-            return res.json({ error })
-        }
-    },
-    async findPacienteByAll(req, res) {
-        try {
-            const { nome } = req.params;
-            const pacientes = await prisma.$queryRaw`
-            SELECT * FROM "Paciente"
-            WHERE LOWER("nome") LIKE ${`%${nome.toLowerCase()}%`}
-            OR "cpf" LIKE ${`%${nome}%`}
-            OR "num_sus" LIKE ${`%${nome}%`}
-            OR "rg" LIKE ${`%${nome}%`};
-            
-        `;
-    
-            if (!pacientes || pacientes.length === 0) {
-                return res.json({ error: "Usuário não existe" });
-            }
-    
-            return res.json(pacientes);
-        } catch (error) {
-            console.error("Erro ao buscar pacientes:", error);
-            return res.status(500).json({ error: "Ocorreu um erro ao buscar pacientes." });
-        }
-    },
-    async updatePaciente(req, res) {
-        try {
-            const { id } = req.params
-
-            const { cpf, nome, rg, datNascimento, num_sus, endereco, contato } = req.body;
-            const { cep, rua, numero, bairro, cidade } = endereco;
-            const { email_1, telefone_1 } = contato;
-
-            let paciente = await prisma.paciente.findUnique({ where: { id: Number(id) } })
-            if (!paciente)
-                return res.status(404).json({ error: "Usuário não existe" })
-
-                paciente = await prisma.paciente.update({ 
-                    where: { id: Number(id) }, 
-                    data: { 
-                        cpf, 
-                        nome, 
-                        rg, 
-                        datNascimento, 
-                        num_sus, 
-                        endereco: {
-                            update: {
-                                cep,
-                                rua,
-                                numero,
-                                bairro,
-                                cidade
-                            }
-                        },
-                        contato: {
-                            update: {
-                                email_1,
-                                telefone_1
-                            }
-                        }
-                    } 
-                });
-            return res.json(paciente)
-
-        } catch (error) { 
-            console.error(error)
-            return res.status(500).json({ error: "Não foi possivel atualizar o paciente" }) }
-    },
-
-
-    async deletePacienteById(req, res) {
-        try {
-            const { id } = req.params
-            let paciente = await prisma.paciente.findUnique({ where: { id: Number(id) } })
-            if (!paciente) return res.json({ error: "Usuário não existe" })
-            await prisma.paciente.delete({ where: { id: Number(id) } })
-            return res.json({message: "Paciente deletado"})
         } catch (error) {
             return res.json({ error })
         }
