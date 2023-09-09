@@ -12,19 +12,29 @@ const data = [
     link: '/admin/paciente/pacientes',
   },
   {
-    title: 'Funcionários',
+    title: 'Enfermeiras',
     icon: <FontAwesomeIcon className="h-6 w-6" icon="user-nurse" />,
-    link: '/admin/funcionarios',
+    link: '/admin/enfermeira/enfermeiras',
+  },
+  {
+    title: 'Médicos',
+    icon: <FontAwesomeIcon className="h-6 w-6" icon="user-nurse" />,
+    link: '/admin/medico/medicos',
+  },
+  {
+    title: 'Atendentes',
+    icon: <FontAwesomeIcon className="h-6 w-6" icon="user-nurse" />,
+    link: '/admin/atendente/atendentes',
   },
   {
     title: 'Procedimentos',
     icon: <FontAwesomeIcon icon="bed-pulse" />,
-    link: '/admin/procedimentos',
+    link: '/admin/procedimento/procedimentos',
   },
   {
-    title: 'Configurações',
+    title: 'Planos de Saúde',
     icon: <FontAwesomeIcon className="h-6 w-6" icon="gear" />,
-    link: '/admin/configuracoes',
+    link: '/admin/plano/planos',
   },
   {
     title: 'Sair',

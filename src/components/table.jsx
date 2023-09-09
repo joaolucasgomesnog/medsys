@@ -5,40 +5,104 @@ import ReactPaginate from 'react-paginate';
 import Router, { useRouter } from 'next/router';
 import Loading from './loading';
 import toggleLoading from './toggleLoading'
+import { Prisma } from '@prisma/client';
 
-export default function Table({nome}) {
+export default function Table({nome, tipo}) {
     const router = useRouter()
-    const [pacientes, setPacientes] = useState([])
+    const [instancias, setInstancias] = useState([])
+
     const getPacientes = () => {
         
         fetch("http://localhost:3030/pacientes")
         .then(res => res.json())
         .then(dados => {
             console.log(dados)
-            setPacientes(dados)
+            setInstancias(dados)
             
         })
     }
-    const getPacientesbyAll = (nome) => {
-        fetch(`http://localhost:3030/paciente/search/${nome}`)
+    const getbyAll = (nome) => {
+        fetch(`http://localhost:3030/${tipo}/search/${nome}`)
         .then(res => res.json())
         .then(dados => {
             console.log(dados)
-            setPacientes(dados)
+            setInstancias(dados)
             
         })
     }
 
+
+    const getEnfermeiras = () => {
+        
+        fetch("http://localhost:3030/enfermeiras")
+        .then(res => res.json())
+        .then(dados => {
+            console.log(dados)
+            setInstancias(dados)
+            
+        })
+    }
+
+    const getMedicos = () => {
+        
+        fetch("http://localhost:3030/medicos")
+        .then(res => res.json())
+        .then(dados => {
+            console.log(dados)
+            setInstancias(dados)
+            
+        })
+    }
+
+    const getAtendentes = () => {
+        
+        fetch("http://localhost:3030/atendentes")
+        .then(res => res.json())
+        .then(dados => {
+            console.log(dados)
+            setInstancias(dados)
+            
+        })
+    }
+
+
+
     useEffect(() => {
         toggleLoading()
-        
-        if (nome == "") {
-            getPacientes()
-            toggleLoading()
-        }else{
-            getPacientesbyAll(nome)
-            toggleLoading()
+        if (tipo == "paciente") {
+            if (nome == "") {
+                getPacientes()
+                toggleLoading()
+            }else{
+                getbyAll(nome)
+                toggleLoading()
+            }
+        }else if (tipo == "medico") {
+            if (nome == "") {
+                getMedicos()
+                toggleLoading()
+            }else{
+                getbyAll(nome)
+                toggleLoading()
+            }
+        }else if (tipo == "enfermeira") {
+            if (nome == "") {
+                getEnfermeiras()
+                toggleLoading()
+            }else{
+                getbyAll(nome)
+                toggleLoading()
+            }
+        }else if (tipo == "atendente") {
+            if (nome == "") {
+                getAtendentes()
+                toggleLoading()
+            }else{
+                getbyAll(nome)
+                toggleLoading()
+            }
         }
+        
         
     },[nome])
 
@@ -50,7 +114,7 @@ export default function Table({nome}) {
     };
   
     const offset = currentPage * itemsPerPage;
-    const paginatedData = pacientes.slice(offset, offset + itemsPerPage);
+    const paginatedData = instancias.slice(offset, offset + itemsPerPage);
 
 
 
@@ -75,7 +139,8 @@ export default function Table({nome}) {
                                 RG
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                SUS
+                                {tipo =="paciente" ? "SUS" : "Identificação"}
+                               
                             </th>
                             <th scope="col" className="pl-15 py-3 text-left">
                                 Ação
@@ -84,16 +149,17 @@ export default function Table({nome}) {
                     </thead>
                     <tbody>
                         {   
-                            pacientes.map((paciente) =>
+                            instancias.map((instancia) =>
                                 <tr className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600">
-                                    <td className="px-6 py-4">{`${paciente.cpf.slice(0,3)}.${paciente.cpf.slice(3,6)}.${paciente.cpf.slice(6,9)}-${paciente.cpf.slice(9,11)}`}</td>
-                                    <td className="px-6 py-4">{paciente.nome}</td>
-                                    <td className="px-6 py-4">{paciente.rg}</td>
-                                    <td className="px-6 py-4">{paciente.num_sus}</td>
+                                    {/* <td className="px-6 py-4">{`${instancia.cpf.slice(0,3)}.${instancia.cpf.slice(3,6)}.${instancia.cpf.slice(6,9)}-${instancia.cpf.slice(9,11)}`}</td> */}
+                                    <td className="px-6 py-4">{`${instancia.cpf.slice(0,3)}.${instancia.cpf.slice(3,6)}.${instancia.cpf.slice(6,9)}-${instancia.cpf.slice(9,11)}`}</td>
+                                    <td className="px-6 py-4">{instancia.nome}</td>
+                                    <td className="px-6 py-4">{instancia.rg}</td>
+                                    <td className="px-6 py-4">{tipo =="paciente" ? instancia.num_sus : instancia.coren || instancia.crm}</td>
                                     <td className="pl-15 py-4 justify-center">
                                         <span className='flex flex-row space-x-2'>
                                             <button className='rounded-md h-6 w-6  bg-transparent text-white placeholder-gray-400  focus:outline-none focus:ring-1 border-gray-400 border'>
-                                                <FontAwesomeIcon icon="pencil" className="text-gray-400" onClick={() => {router.push(`/admin/paciente/editar/${paciente.id}`)}}/>
+                                                <FontAwesomeIcon icon="pencil" className="text-gray-400" onClick={() => {router.push(`/admin/${tipo}/editar/${instancia.id}`)}}/>
                                             </button>
                                             <button className='rounded-md h-6 w-6  bg-transparent text-white placeholder-gray-400  focus:outline-none focus:ring-1 border-gray-400 border'>
                                                 <FontAwesomeIcon icon="trash" className="text-gray-400" />
@@ -109,7 +175,7 @@ export default function Table({nome}) {
                 <ReactPaginate className='flex flex-row justify-end gap-3 bg-gray-700 text-gray-400 pr-5'
                     previousLabel={<FontAwesomeIcon icon="arrow-left" className="text-gray-400" />} 
                     nextLabel={<FontAwesomeIcon icon="arrow-right" className="text-gray-400" />}
-                    pageCount={Math.ceil(pacientes.length / itemsPerPage)}
+                    pageCount={Math.ceil(instancias.length / itemsPerPage)}
                     onPageChange={handlePageChange}
                     containerClassName={'pagination'}
                     activeClassName={'active'}

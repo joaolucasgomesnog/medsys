@@ -38,7 +38,7 @@ export default function PacientesPage() {
           </Link>
         </div>
         <br />
-        <Table nome={searchValue} tipo={'paciente'}/>
+        <Table nome={searchValue} tipo={'atendente'}/>
       </Content>
     </PrivateRoute>
   );

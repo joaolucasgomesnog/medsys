@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import PrivateRoute from '../../../components/privateRoute';
 
-export default function PacientesPage() {
+export default function EnfermeirasPage() {
   const [searchValue, setSearchValue] = useState('');
 
   const handleSearchChange = (event) => {
@@ -16,7 +16,7 @@ export default function PacientesPage() {
   return (
     <PrivateRoute>
 
-      <Content title="Pacientes">
+      <Content title="Enfermeiras">
         <div className="flex row gap-3">
           <div className="relative w-full">
             <input
@@ -38,7 +38,7 @@ export default function PacientesPage() {
           </Link>
         </div>
         <br />
-        <Table nome={searchValue} tipo={'paciente'}/>
+        <Table nome={searchValue} tipo={'enfermeira'}/>
       </Content>
     </PrivateRoute>
   );

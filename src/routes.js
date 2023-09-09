@@ -1,5 +1,9 @@
 import { Router } from "express";
 import PacienteController from "./controllers/PacienteController";
+import AtendenteController from "./controllers/AtendenteController"
+import EnfermeiraController from "./controllers/EnfermeiraController"
+import MedicoController from "./controllers/MedicoController"
+import funcionarioController from "./controllers/funcionarioController";
 
 const router = Router()
 
