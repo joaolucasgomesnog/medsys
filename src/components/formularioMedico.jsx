@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import toggleLoading from './toggleLoading';
 import Loading from './loading';
 
-const FormularioAtendente = (props) => {
+const FormularioMedico = (props) => {
   const router = useRouter()
   const [endereco, setEndereco] = useState({
     cep: '',
@@ -20,7 +20,8 @@ const FormularioAtendente = (props) => {
     email_1: '',
     email_2: ''
   })
-  const [atendente, setAtendente] = useState({
+  const [medico, setMedico] = useState({
+    crm:'',
     cpf: '',
     nome: '',
     rg: '',
@@ -33,7 +34,7 @@ const FormularioAtendente = (props) => {
 
   const getPacientebyid = (idNum) => {
     toggleLoading()
-    fetch(`http://localhost:3030/atendente/${idNum}`)
+    fetch(`http://localhost:3030/medico/${idNum}`)
       .then(res => {
         if (!res.ok) {
           throw new Error(`Erro na requisição: ${res.status} ${res.statusText}`);
@@ -43,7 +44,7 @@ const FormularioAtendente = (props) => {
       .then(dados => {
         setEndereco(dados.endereco)
         setContato(dados.contato)
-        setAtendente(dados);
+        setMedico(dados);
         console.log(dados);
         console.log(dados.endereco);
         console.log(dados.contato);
@@ -82,7 +83,7 @@ const FormularioAtendente = (props) => {
 
   const handleInputChangePaciente = (e) => {
     const { name, value } = e.target;
-    setAtendente((prevData) => ({
+    setMedico((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -103,7 +104,7 @@ const FormularioAtendente = (props) => {
       ...prevData,
       [name]: value,
     }));
-    atendente.endereco = endereco
+    medico.endereco = endereco
   };
   const handleInputChangeContato = (e) => {
     const { name, value } = e.target;
@@ -111,7 +112,7 @@ const FormularioAtendente = (props) => {
       ...prevData,
       [name]: value,
     }));
-    atendente.contato = contato
+    medico.contato = contato
   };
 
 
@@ -134,31 +135,31 @@ const FormularioAtendente = (props) => {
 
   }
 
-  const cadastrarPaciente = (pacienteData) => {
-    fetch(`http://localhost:3030/atendente`, {
+  const cadastrarEnfermeira = (pacienteData) => {
+    fetch(`http://localhost:3030/medico`, {
       method:'POST',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify(pacienteData)
     })
       .then(res => {
         if (res.ok) {
-          console.log('Atendente cadastrado') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
-          router.push('/admin/atendente/atendentes')
+          console.log('Medico cadastrada') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
+          router.push('/admin/medico/medicos')
         }
 
       })
   }
 
-  const atualizarPaciente = (pacienteData) => {
-    fetch(`http://localhost:3030/atendente/${props.id}`, {
+  const atualizarEnfermeira = (pacienteData) => {
+    fetch(`http://localhost:3030/medico/${props.id}`, {
       method:'PUT',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify(pacienteData)
     })
       .then(res => {
         if (res.ok) {
-          console.log('Atendente atualizado') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
-          router.push('/admin/atendente/atendentes')
+          console.log('Medico atualizada') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
+          router.push('/admin/medico/medicos')
         }
 
       })
@@ -177,21 +178,21 @@ const FormularioAtendente = (props) => {
         label="Nome completo"
         name="nome"
         placeholder="nome"
-        value={atendente.nome}
+        value={medico.nome}
         onChange={handleInputChangePaciente}
       />
       <Field
         label="CPF"
         name="cpf"
         placeholder="cpf"
-        value={atendente.cpf}
+        value={medico.cpf}
         onChange={handleInputChangePaciente}
       />
       <Field
         label="RG"
         name="rg"
         placeholder="rg"
-        value={atendente.rg}
+        value={medico.rg}
         onChange={handleInputChangePaciente}
       />
       <Field
@@ -202,10 +203,10 @@ const FormularioAtendente = (props) => {
         onBlur={handleDateBlur}
       />
       <Field
-        label="SUS"
-        name="num_sus"
+        label="COREN"
+        name="coren"
         placeholder="65654646464643"
-        value={atendente.num_sus}
+        value={medico.coren}
         onChange={handleInputChangePaciente}
       />
       </div>
@@ -296,9 +297,9 @@ const FormularioAtendente = (props) => {
 
         <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={()=>{
           if (props.tipo == 'Cadastrar') {
-            cadastrarPaciente(atendente)
+            cadastrarEnfermeira(medico)
         }else if (props.tipo == 'Atualizar') {
-            atualizarPaciente(atendente)
+            atualizarEnfermeira(medico)
         }
         }}>{props.tipo}</button>
       </div>
@@ -418,4 +419,4 @@ const LockIcon = () => (
 );
 
 
-export default FormularioAtendente
+export default FormularioMedico

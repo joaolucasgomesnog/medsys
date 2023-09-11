@@ -4,6 +4,7 @@ import AtendenteController from "./controllers/AtendenteController"
 import EnfermeiraController from "./controllers/EnfermeiraController"
 import MedicoController from "./controllers/MedicoController"
 import funcionarioController from "./controllers/funcionarioController";
+import AtendimentoController from "./controllers/AtendimentoController";
 
 const router = Router()
 
@@ -41,5 +42,13 @@ router.delete("/medico/:id", MedicoController.deleteMedicoById);
 router.get("/funcionarios", funcionarioController.findAllFuncionarios)
 
 router.get("/funcionarios", funcionarioController.findAllFuncionarios)
+
+router.post("/atendimento",AtendimentoController.createAtendimento)
+router.get("/atendimentos",AtendimentoController.findAllAtendimentos)
+router.get("/atendimento/:id",AtendimentoController.findAtendimentoById)
+router.get("/atendimento/search/:nome",AtendimentoController.findAtendimentoByAll)
+router.put("/atendimento/:id",AtendimentoController.updateAtendimento)
+router.delete("/atendimento/:id",AtendimentoController.deleteAtendimentoById)
+
 
 export {router}

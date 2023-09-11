@@ -55,7 +55,7 @@ export default{
     async findAtendenteById(req, res) {
         try {
             const { id } = req.params
-            const atendente = await prisma.atendente.findUnique({ where: { id: Number(id) } })
+            const atendente = await prisma.atendente.findUnique({ where: { id: Number(id) }, include : {endereco: true, contato: true}})
             if (!atendente) return res.json({ error: "Atendente não existe" })
             return res.json(atendente)
 

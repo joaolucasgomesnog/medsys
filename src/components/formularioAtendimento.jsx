@@ -4,32 +4,36 @@ import { useRouter } from 'next/router';
 import toggleLoading from './toggleLoading';
 import Loading from './loading';
 
-const FormularioAtendente = (props) => {
+
+const FormularioAtendimento = (props) => {
   const router = useRouter()
-  const [endereco, setEndereco] = useState({
-    cep: '',
-    rua: '',
-    numero: '',
-    bairro: '',
-    cidade: '',
-    uf: ''
+
+  const [prontuario, setProntuario] = useState({
+    paciente_id: '',
+    medico_id: '',
+    data_consulta: '',
+    sintomas: '',
+    diagnostico: '',
+    receita: '',
+    observacoes: ''
   })
-  const [contato, setContato] = useState({
-    telefone_1: '',
-    telefone_2: '',
-    email_1: '',
-    email_2: ''
+  const [atendimento, setAtendimento] = useState({
+    data: '',
+    status: '',
+    paciente_id: '',
+    medico_id: '',
+    enfermeira_id: '',
+    atendente_id: '',
+    prontuario: prontuario
   })
-  const [atendente, setAtendente] = useState({
-    cpf: '',
-    nome: '',
-    rg: '',
-    num_sus: '',
-    datNascimento: "",
-    num_sus: "",
-    endereco: endereco,
-    contato: contato
-  })
+
+  const dataList = [
+    
+  ];
+
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredData = dataList.filter(item => item.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const getPacientebyid = (idNum) => {
     toggleLoading()
@@ -115,29 +119,12 @@ const FormularioAtendente = (props) => {
   };
 
 
-  const checkCEP = (e) => {
-      const cep = document.querySelector('#cep').value.replace(/\D/g,'')
-      console.log(cep)
-      fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      .then(res => res.json())
-      .then(dados => {
-        console.log(dados)
-        endereco.bairro = dados.bairro
-        endereco.rua = dados.logradouro
-        endereco.cidade = dados.localidade
-        endereco.uf = dados.uf
-        document.querySelector('#rua').value = dados.logradouro
-        document.querySelector('#bairro').value = dados.bairro
-        document.querySelector('#cidade').value = dados.localidade
-        document.querySelector('#uf').value = dados.uf
-      })
 
-  }
 
   const cadastrarPaciente = (pacienteData) => {
     fetch(`http://localhost:3030/atendente`, {
-      method:'POST',
-      headers:{'Content-Type': 'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(pacienteData)
     })
       .then(res => {
@@ -151,8 +138,8 @@ const FormularioAtendente = (props) => {
 
   const atualizarPaciente = (pacienteData) => {
     fetch(`http://localhost:3030/atendente/${props.id}`, {
-      method:'PUT',
-      headers:{'Content-Type': 'application/json'},
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(pacienteData)
     })
       .then(res => {
@@ -167,143 +154,114 @@ const FormularioAtendente = (props) => {
 
 
   return (
-    
-    <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 ">
-      <Loading/>
-      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
-      <p className="font-bold self-center">Dados passoais</p>
-      <br />
-      <Field
-        label="Nome completo"
-        name="nome"
-        placeholder="nome"
-        value={atendente.nome}
-        onChange={handleInputChangePaciente}
-      />
-      <Field
-        label="CPF"
-        name="cpf"
-        placeholder="cpf"
-        value={atendente.cpf}
-        onChange={handleInputChangePaciente}
-      />
-      <Field
-        label="RG"
-        name="rg"
-        placeholder="rg"
-        value={atendente.rg}
-        onChange={handleInputChangePaciente}
-      />
-      <Field
-        label="Data de nascimento"
-        name="datNascimento"
-        placeholder="01/01/1999"
-        type="date"
-        onBlur={handleDateBlur}
-      />
-      <Field
-        label="SUS"
-        name="num_sus"
-        placeholder="65654646464643"
-        value={atendente.num_sus}
-        onChange={handleInputChangePaciente}
-      />
-      </div>
+
+    <div className="flex flex-col lg:flex-row justify-center lg:space-x-6 items-center">
+      <Loading />
 
 
 
-      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
-        <p className="font-bold self-center">Endereço</p>
+
+      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white mt-11">
+        <p className="font-bold self-center">Novo atendimento</p>
         <br />
-        <span className="relative w-full">
-          <Field label="Cep"
-            name="cep"
-            placeholder="cep"
-            value={endereco.cep}
-            onChange={handleInputChangeEndereco}
-            onBlur={checkCEP}
+        <Field
+          label="Data"
+          name="data"
+          type="date"
+          onChange={e => setSearchTerm(e.target.value)}
+        />
 
-          />
-          <span className="absolute inset-y-0 right-0 pr-3 flex items-center" onClick={checkCEP} >
-            <FontAwesomeIcon icon="search" className="text-gray-400" />
+
+        <div>
+          <span className="relative w-full">
+            <Field
+              label="Paciente"
+              name="paciente"
+              type="text"
+              placeholder="Pesquisar..."
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <span className="absolute inset-y-12  right-0 pr-3  flex items-center"  >
+              <FontAwesomeIcon icon="search" className="text-gray-400" />
+            </span>
           </span>
-        </span>
-        <Field label="Rua"
-          name="rua"
-          id="rua"
-          placeholder="rua"
-          value={endereco.rua}
-          onChange={handleInputChangeEndereco}
-        />
-        <Field label="Número"
-          name="numero"
-          placeholder="0000"
-          value={endereco.numero}
-          onChange={handleNumero}
-        />
-        {/* dot  - SE EU QUISER COLOCAR UM ALERTA DE PRIORIDADE NO CAMPO*/}
-        <Field label="Bairro"
-          name="bairro"
-          placeholder="bairro"
-          value={endereco.bairro}
-          onChange={handleInputChangeEndereco}
-        />
-        <span className='flex  w-full items-center gap-2 p-0 m-0'>
-          <Field label="Cidade"
-            name="cidade"
-            placeholder="Serra Talhada"
-            value={endereco.cidade}
-            onChange={handleInputChangeEndereco}
-          />
-          <Field label="Estado"
-            name="uf"
-            placeholder="PE"
-            value={endereco.uf}
-            onChange={handleInputChangeEndereco}
-          />
-        </span>
+
+          <ul className="mt-2 text-xs ">
+            {filteredData.map((item, index) => (
+              <li key={index} className="p-2">{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <span className="relative w-full">
+            <Field
+              label="Atendente"
+              name="paciente"
+              type="text"
+              placeholder="Pesquisar..."
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <span className="absolute inset-y-12  right-0 pr-3  flex items-center"  >
+              <FontAwesomeIcon icon="search" className="text-gray-400" />
+            </span>
+          </span>
+
+          <ul className="mt-2 text-xs ">
+            {filteredData.map((item, index) => (
+              <li key={index} className="p-2">{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <span className="relative w-full">
+            <Field
+              label="Enfermeira"
+              name="paciente"
+              type="text"
+              placeholder="Pesquisar..."
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <span className="absolute inset-y-12  right-0 pr-3  flex items-center"  >
+              <FontAwesomeIcon icon="search" className="text-gray-400" />
+            </span>
+          </span>
+
+          <ul className="mt-2 text-xs ">
+            {filteredData.map((item, index) => (
+              <li key={index} className="p-2">{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <span className="relative w-full">
+            <Field
+              label="Médico"
+              name="paciente"
+              type="text"
+              placeholder="Pesquisar..."
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <span className="absolute inset-y-12  right-0 pr-3  flex items-center"  >
+              <FontAwesomeIcon icon="search" className="text-gray-400" />
+            </span>
+          </span>
+
+          <ul className="mt-2 text-xs ">
+            {filteredData.map((item, index) => (
+              <li key={index} className="p-2">{item}</li>
+            ))}
+          </ul>
+        </div>
+
+        <button className="rounded bg-red-500 h-11 mt-12 text-white">Lançar</button>
+
       </div>
 
 
 
-      <div className="flex flex-col w-full lg:max-w-screen-lg space-y-6 p-6 rounded-2xl bg-gray-900 text-white">
-          <p className="font-bold self-center">Contato</p>
-          <br />
-          <Field label="Telefone 1"
-            name="telefone_1"
-            placeholder="87 99999999"
-            value={contato.telefone_1}
-            onChange={handleInputChangeContato}
-          />
-          <Field label="Telefone 2"
-            name="telefone_2"
-            placeholder="87 99999999"
-            value={contato.telefone_2}
-            onChange={handleInputChangeContato}
-          />
-          <Field label="E-mail 1"
-            name="email_1"
-            placeholder="usuario@dominio.com"
-            value={contato.email_1}
-            onChange={handleInputChangeContato}
-          />
-          <Field label="E-mail 2"
-          name="email_2"
-          placeholder="usuario@dominio.com"
-          value={contato.email_2}
-          onChange={handleInputChangeContato}
-          />
 
-        <button className="rounded bg-red-500 h-11 mt-12 text-white" onClick={()=>{
-          if (props.tipo == 'Cadastrar') {
-            cadastrarPaciente(atendente)
-        }else if (props.tipo == 'Atualizar') {
-            atualizarPaciente(atendente)
-        }
-        }}>{props.tipo}</button>
-      </div>
     </div>
-)
+  )
 }
 /*  COMPONENT LOGIC */
 
@@ -418,4 +376,4 @@ const LockIcon = () => (
 );
 
 
-export default FormularioAtendente
+export default FormularioAtendimento

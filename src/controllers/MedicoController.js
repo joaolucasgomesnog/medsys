@@ -56,7 +56,7 @@ export default {
     async findMedicoById(req, res) {
         try {
             const { id } = req.params
-            const medico = await prisma.medico.findUnique({ where: { id: Number(id) } })
+            const medico = await prisma.medico.findUnique({ where: { id: Number(id) }, include : {endereco: true, contato: true}})
             if (!medico) return res.json({ error: "Médico não existe" })
             return res.json(medico)
 

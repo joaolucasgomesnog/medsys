@@ -59,6 +59,7 @@ const FormularioEnfermeira = (props) => {
     console.log(props.id)
     if (props.id != null) {
       getPacientebyid(props.id);
+      
     }
   }, [props.id]);
 
@@ -159,7 +160,7 @@ const FormularioEnfermeira = (props) => {
       .then(res => {
         if (res.ok) {
           console.log('Enfermeira atualizada') //depois vou colocar um get clientes aqui quando o metodo estiver pronto
-          router.push('/admin/enfermeira/pacientes')
+          router.push('/admin/enfermeira/enfermeiras')
         }
 
       })

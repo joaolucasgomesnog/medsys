@@ -27,9 +27,9 @@ const data = [
     link: '/admin/atendente/atendentes',
   },
   {
-    title: 'Procedimentos',
+    title: 'Atendimentos',
     icon: <FontAwesomeIcon icon="bed-pulse" />,
-    link: '/admin/procedimento/procedimentos',
+    link: '/admin/atendimento/atendimentos',
   },
   {
     title: 'Planos de Saúde',

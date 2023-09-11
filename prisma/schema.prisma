@@ -12,7 +12,7 @@ datasource db {
 
 model Endereco {
   id         Int          @id @default(autoincrement())
-  cep        String? // O sinal de interrogação torna o campo opcional
+  cep        String @default(" ")
   rua        String
   numero     String //botei o numero como string porque as vezes o número da casa contém letra
   bairro     String

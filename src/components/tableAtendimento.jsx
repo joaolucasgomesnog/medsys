@@ -7,7 +7,7 @@ import Loading from './loading';
 import toggleLoading from './toggleLoading'
 import { Prisma } from '@prisma/client';
 
-export default function Table({nome, tipo}) {
+export default function TableAtendimento({nome, tipo}) {
     const router = useRouter()
     const [instancias, setInstancias] = useState([])
 
@@ -78,7 +78,7 @@ export default function Table({nome, tipo}) {
 
 
     useEffect(() => {
-        toggleLoading()
+        // toggleLoading()
         if (tipo == "paciente") {
             if (nome == "") {
                 getPacientes()
